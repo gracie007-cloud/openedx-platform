@@ -43,6 +43,7 @@ from xblock.runtime import KvsFieldData
 
 from lms.djangoapps.teams.services import TeamsService
 from openedx.core.djangoapps.video_config.services import VideoConfigService
+from openedx.core.djangoapps.discussions.services import DiscussionConfigService
 from openedx.core.lib.xblock_services.call_to_action import CallToActionService
 from xmodule.contentstore.django import contentstore
 from xmodule.exceptions import NotFoundError as XModuleNotFoundError
@@ -51,7 +52,13 @@ from xmodule.modulestore.django import XBlockI18nService, modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 from xmodule.partitions.partitions_service import PartitionService
 from xmodule.util.sandboxing import SandboxService
-from xmodule.services import EventPublishingService, RebindUserService, SettingsService, TeamsConfigurationService
+from xmodule.services import (
+    EventPublishingService,
+    RebindUserService,
+    SettingsService,
+    TeamsConfigurationService,
+    XQueueService
+)
 from common.djangoapps.static_replace.services import ReplaceURLService
 from common.djangoapps.static_replace.wrapper import replace_urls_wrapper
 from lms.djangoapps.courseware.access import get_user_role, has_access
@@ -637,6 +644,8 @@ def prepare_runtime_for_user(
         'publish': EventPublishingService(user, course_id, track_function),
         'enrollments': EnrollmentsService(),
         'video_config': VideoConfigService(),
+        'discussion_config_service': DiscussionConfigService(),
+        'xqueue': XQueueService,
     }
 
     runtime.get_block_for_descriptor = inner_get_block
